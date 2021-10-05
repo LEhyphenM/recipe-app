@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <h1> {{ title }} </h1>
+    <Header />
     <form @submit.prevent="addRecipe">
       <div>
         <label>{{ recipeTitle }}</label>
@@ -16,27 +16,34 @@
       </div>
       <button type="submit">{{ submitBtn }}</button>
     </form>
-    <div v-for="(r, index) of recipes" :key="r.id">
-      <fieldset>
-        <h1>{{ r.name }}</h1>
-        <h2> {{ ingredientsLabel }} </h2>
-        <div class="content">{{ r.ingredients }}</div>
-        <h2> {{ stepsLabel }} </h2>
-        <div class="content">{{ r.steps }}</div>
-        <button class="removeBtn" type="button" @click="deleteRecipe(index)">{{ deleteBtn }}</button>
-      </fieldset>
+    <div v-for="(r, index) of recipes" :key="r.id" class="recipe">
+      <div class="recipe-content">
+        <fieldset>
+          <h1>{{ r.name }}</h1>
+          <h2> {{ ingredientsLabel }} </h2>
+          <div class="content">{{ r.ingredients }}</div>
+          <h2> {{ stepsLabel }} </h2>
+          <div class="content">{{ r.steps }}</div>
+          <button class="removeBtn" type="button" @click="deleteRecipe(index)">{{ deleteBtn }}</button>
+        </fieldset>
+      </div>
     </div>
-    <h6> {{ footer }} </h6>
+    <Footer />
   </div>
 </template>
 
 <script>
+import Header from "./components/Header.vue";
+import Footer from './components/Footer.vue';
 import { v4 as uuidv4 } from "uuid";
 export default {
   name: "App",
+  components: {
+    Header,
+    Footer
+  },
   data() {
     return {
-      title:"Simple Recipe App",
       recipeTitle: "Recipe Name",
       ingredientsLabel: "Ingredients",
       stepsLabel: "Steps",
@@ -48,7 +55,6 @@ export default {
         steps: "",
       },
       recipes: [],
-      footer: "Lauren Elliott-Manheim • 2015-2022 • Ex astris, scientia"
     };
   },
   computed: {
@@ -75,29 +81,8 @@ export default {
 </script>
 
 <style lang="scss">
-  @mixin styleRemoval {
-    box-shadow: none;
-    outline: none;
-    background-color:transparent;
-  }
-  @mixin defaultText {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color:$text;
-  }
-  $size1: 8px;
-  $size2: 12px;
-  $size3: 18px;
-  $size4: 24px;
-  $size5: 36px;
-  $size6: 48px;
-  $background:#224459;
-  $text:#F2F2F0;
-  $primary:#8599A6;
-  $accent:#D5D973;
-  $highlight:#B4D930;
-  
+  @import "./scss/variables.scss";
+  @import "./scss/mixins.scss";
   body {
     margin: 0;
     padding: 0;
@@ -109,27 +94,28 @@ export default {
     #app {
       max-width: 600px;
       margin:10px auto;
-      padding: 20px;
-      h1, h2, h6 {color:$highlight;}
+      padding: 20px 20px 0;
+
+      h1, h2, h6 {
+        color:$highlight;
+      }
       h1 {
-        font-weight: bold;
         font-size: 28px;
         text-align: center;
-        margin-bottom:30px;
       }
-      h2{
+      h2 {
         font-size:22px;
-        margin:30px auto 10px;
+        margin:20px auto 3px;
         border-bottom:1px solid $primary;
         display:inline-block;
         }
-      h6 {
-        font-weight:400;
-        letter-spacing:2.25px;
-        text-transform:uppercase;
-        padding:16px;
-        text-align:center;
-      }
+      // h6 {
+      //   font-weight:400;
+      //   letter-spacing:2.25px;
+      //   text-transform:uppercase;
+      //   padding:16px;
+      //   text-align:center;
+      // }
       form {
         display: flex;
         flex-direction: column;
@@ -198,36 +184,87 @@ export default {
           }
         }
       }
-      fieldset{
-        border-radius:$size1;
-        border-color:$primary;
-        padding:20px 30px;
-        margin:40px auto;
-      }
-      .content {
-        white-space: pre-wrap;
-        margin-top:3px;
-      }
-      .removeBtn{
-        height:$size5;
-        font-size:18px;
-        background-color:transparent;
-        outline:none;
-        border-radius:$size1;
-        color:$text;
-        outline:none;
-        box-shadow:none;
-        border:1px solid $primary;
-        padding-left: $size2;
-        padding-right: $size2;
-        margin:60px auto 10px;
-        &:hover {
-          cursor:pointer;
-          border-color:$primary;
-          background-color:$primary;
-          transition: all 0.65s ease;
+      .recipe {
+        display: flex;
+        flex-direction: column;
+        max-width: 500px;
+        margin: 0 auto;
+
+        .recipe-content {
+          padding: 20px 0 0;
+          display: flex;
+          margin: 0 auto;
+          width: 100%;
+
+          fieldset {
+            border-radius:$size1;
+            border-color:$primary;
+            padding:20px 30px;
+            margin:20px auto 10px;
+            width:100%;
+            h1 {
+              margin-bottom:0;
+            }
+            .content {
+              white-space: pre-wrap;
+              margin-top:3px;
+            }
+            .removeBtn {
+              height:$size5;
+              font-size:18px;
+              background-color:transparent;
+              outline:none;
+              border-radius:$size1;
+              color:$text;
+              outline:none;
+              box-shadow:none;
+              border:1px solid $primary;
+              padding-left: $size2;
+              padding-right: $size2;
+              margin:60px auto 10px;
+              &:hover {
+                cursor:pointer;
+                border-color:$primary;
+                background-color:$primary;
+                transition: all 0.65s ease;
+              }
+            }
+          }
         }
       }
+    }
+  }
+
+  // X-Small devices (portrait phones, less than 576px)
+  @media (max-width: 575.98px) {
+    body #app {
+      max-width:333px;
+      padding:20px 0 10px;
+      margin:0 auto;
+      form > button {
+        margin-top:24px;
+      }
+      .recipe {
+        .recipe-content {
+          padding:15px 0 ;
+          fieldset{
+
+            h1 {
+              margin-bottom:0px;
+            }
+            h2 {
+              margin:20px auto 0;
+            }
+            .content {
+              margin:10px auto 0;
+            }
+            .removeBtn {
+              width:100%;
+              margin:30px auto 10px;
+            }
+          }
+        }
+      } 
     }
   }
 </style>
